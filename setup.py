@@ -14,7 +14,7 @@ setup(
     description = "CAN Calibration Protocol for Python",
     author = 'Christoph Schueler',
     author_email = 'cpu12.gems@googlemail.com',
-    url = 'http://github.com/christoph2/pyccp',
+    url = 'http://github.com/pySART/pyccp',
     packages = packagez('pyccp'),
     install_requires = ['enum34', 'future', 'mako'],    # 'mock'
     #entry_points = {

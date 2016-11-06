@@ -1,8 +1,8 @@
-# https://travis-ci.org/christoph2/pyccp
+# https://travis-ci.org/pySART/pyccp
 language: python
 sudo: required
 python:
-    - 2.7.8
+    - 2.7.12
     - 3.3
     - 3.4
     - 3.5

@@ -25,6 +25,7 @@ __copyright__="""
 
 from collections import namedtuple
 import enum
+from pprint import pprint
 import struct
 
 
@@ -148,182 +149,41 @@ class DAQList(object):
     """
 
 # File format not recognized.
-class Master(CRO):
+
+class CANMessageObject(object):
+
+    def __init__(self, canID, dlc, data, extendedAddr = False, rtr = False):
+        self.canID = canID
+        self.dlc = dlc
+        self.data = data
+        self.extendedAddr = extendedAddr
+        self.rtr = rtr
+
+    def __str__(self):
+        addrFmt =  "[{:08X}]  " if self.extendedAddr else "{:04X}  "
+        fmt = addrFmt + "{}"
+        return fmt.format(self.canID, " ".join(["{:02X}".format(x) for x in self.data]))
+
+    __repr__ = __str__
+
+
+class Transport(object):
 
     def __init__(self):
-        self.slaveConnections = {}
-
-    def sendCRO(self, canID, cmd, ctr, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0):
-        """Transfer up to 6 data bytes from master to slave (ECU).
-        """
         pass
 
-    # Mandatory Commands.
-    def connect(self, canID, address):
-        h = (address & 0xff00) >> 8
-        l = address & 0x00ff
-        self.sendCRO(canID, CommandCodes.CONNECT, l, h)
-
-    def getCCPVersion(self, canID):
-        pass # GET_CCP_VERSION
-
-    def exchangeId(self, canID):
-        pass    # EXCHANGE_ID
-
-    def setMta(self, canID):
-        pass    # SET_MTA
-
-    def dnload(self, canID):
-        pass    # DNLOAD
-
-    def upload(self, canID):
-        pass    # UPLOAD
-
-    def getDaqSize(self, canID):
-        pass    # GET_DAQ_SIZE
-
-    def setDaqPtr(self, canID):
-        pass    # SET_DAQ_PTR
-
-    def writeDaq(self, canID):
-        pass    # WRITE_DAQ
-
-    def startStop(self, canID):
-        pass    # START_STOP
-
-    def disconnect(self, canID):
-        pass    # DISCONNECT
-
-    # Optional Commands.
-    def test(self, canID):
-        pass
-
-    def dnload6(self, canID):
-        pass
-
-    def shortUp(self, canID, size, address, addressExtension):
-        """
-        0x0f    0x23 0x04 0x00 0x12 0x34 0x56 0x 78
-        """
-        pass
-
-    def startStopAll(self, canID):
-        pass
-
-    def setSStatus(self, canID):
-        pass
-
-    def getSStatus(self, canID):
-        pass
-
-    def buildChksum(self, canID):
-        pass
-
-    def clearMemory(self, canID):
-        pass
-
-    def program(self, canID):
-        pass
-
-    def program6(self, canID):
-        pass
-
-    def move(self, canID):
-        pass
-
-    def getActiveCalPage(self, canID):
-        pass
-
-    def selectCalPage(self, canID):
-        pass
-
-    def unlock(self, canID):
-        pass
-
-    def getSeed(self, canID):
-        pass
+    def send(self, canID, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, b7 = 0):
+        self.message = CANMessageObject(canID, 8, bytearray((b0, b1, b2, b3, b4, b5, b6, b7)))
 
 
-class Slave(object):
+def main():
+    transport = Transport()
+    master = Master(transport)
+    master.ctr = 0x01
+    master.connect(0x7E1, 0x39)
 
-    def __init__(self):
-        self._mta = 0x0000
 
-    def onConnect(self):
-        pass
+if __name__ == '__main__':
+    main()
 
-    def onTest(self):
-        pass
-
-    def OnExchangeId(self):
-        pass
-
-    def onSetMta(self):
-        pass
-
-    def onDnload(self):
-        pass
-
-    def onDnload6(self):
-        pass
-
-    def onUpload(self):
-        pass
-
-    def onShortUp(self):
-        """
-        0xff    0x00 0x23 0x10 0x11 0x12 0x13
-        """
-        pass
-
-    def onGetDaqSize(self):
-        pass
-
-    def onSetDaqPtr(self):
-        pass
-
-    def onWriteDaq(self):
-        pass
-
-    def onStartStopAll(self):
-        pass
-
-    def onStartStop(self):
-        pass
-
-    def onDisconnect(self):
-        pass
-
-    def onSetSStatus(self):
-        pass
-
-    def onGetSStatus(self):
-        pass
-
-    def onBuildChksum(self):
-        pass
-
-    def onClearMemory(self):
-        pass
-
-    def onProgram(self):
-        pass
-
-    def onProgram6(self):
-        pass
-
-    def onMove(self):
-        pass
-
-    def onGetActiveCalPage(self):
-        pass
-
-    def onSelectCalPage(self):
-        pass
-
-    def onUnlock(self):
-        pass
-
-    def onGetSeed(self):
-        pass
 

@@ -25,6 +25,7 @@ __copyright__="""
 
 from collections import namedtuple
 import enum
+import struct
 
 
 MAX_CTO = 0x0008
@@ -32,22 +33,27 @@ MAX_DTO = 0x0008
 
 
 class CommandCodes(enum.IntEnum):
+    """
+    """
+
+    # Mandatory Commands.
     CONNECT             = 0x01
     GET_CCP_VERSION     = 0x1B
     EXCHANGE_ID         = 0x17
-    GET_SEED            = 0x12
-    UNLOCK              = 0x13
     SET_MTA             = 0x02
     DNLOAD              = 0x03
-    DNLOAD_6            = 0x23
     UPLOAD              = 0x04
-    SHORT_UP            = 0x0F
-    SELECT_CAL_PAGE     = 0x11
     GET_DAQ_SIZE        = 0x14
     SET_DAQ_PTR         = 0x15
     WRITE_DAQ           = 0x16
     START_STOP          = 0x06
     DISCONNECT          = 0x07
+    # Optional Commands.
+    GET_SEED            = 0x12
+    UNLOCK              = 0x13
+    DNLOAD_6            = 0x23
+    SHORT_UP            = 0x0F
+    SELECT_CAL_PAGE     = 0x11
     SET_S_STATUS        = 0x0C
     GET_S_STATUS        = 0x0D
     BUILD_CHKSUM        = 0x0E
@@ -90,11 +96,6 @@ class State(enum.IntEnum):
 class CRO(object):
     """Command Receive Object.
     """
-
-    def send(self, cmd, ctr, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0):
-        """Transfer up to 6 data bytes from master to slave (ECU).
-        """
-        pass
 
 
 class DTO(object):
@@ -150,84 +151,96 @@ class DAQList(object):
 class Master(CRO):
 
     def __init__(self):
+        self.slaveConnections = {}
+
+    def sendCRO(self, canID, cmd, ctr, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0):
+        """Transfer up to 6 data bytes from master to slave (ECU).
+        """
         pass
 
-    def connect(self):
+    # Mandatory Commands.
+    def connect(self, canID, address):
+        h = (address & 0xff00) >> 8
+        l = address & 0x00ff
+        self.sendCRO(canID, CommandCodes.CONNECT, l, h)
+
+    def getCCPVersion(self, canID):
+        pass # GET_CCP_VERSION
+
+    def exchangeId(self, canID):
+        pass    # EXCHANGE_ID
+
+    def setMta(self, canID):
+        pass    # SET_MTA
+
+    def dnload(self, canID):
+        pass    # DNLOAD
+
+    def upload(self, canID):
+        pass    # UPLOAD
+
+    def getDaqSize(self, canID):
+        pass    # GET_DAQ_SIZE
+
+    def setDaqPtr(self, canID):
+        pass    # SET_DAQ_PTR
+
+    def writeDaq(self, canID):
+        pass    # WRITE_DAQ
+
+    def startStop(self, canID):
+        pass    # START_STOP
+
+    def disconnect(self, canID):
+        pass    # DISCONNECT
+
+    # Optional Commands.
+    def test(self, canID):
         pass
 
-    def test(self):
+    def dnload6(self, canID):
         pass
 
-    def exchangeId(self):
-        pass
-
-    def setMta(self):
-        pass
-
-    def dnload(self):
-        pass
-
-    def dnload6(self):
-        pass
-
-    def upload(self):
-        pass
-
-    def shortUp(self, size, address, addressExtension):
+    def shortUp(self, canID, size, address, addressExtension):
         """
         0x0f    0x23 0x04 0x00 0x12 0x34 0x56 0x 78
         """
         pass
 
-    def getDaqSize(self):
+    def startStopAll(self, canID):
         pass
 
-    def setDaqPtr(self):
+    def setSStatus(self, canID):
         pass
 
-    def writeDaq(self):
+    def getSStatus(self, canID):
         pass
 
-    def startStopAll(self):
+    def buildChksum(self, canID):
         pass
 
-    def startStop(self):
+    def clearMemory(self, canID):
         pass
 
-    def disconnect(self):
+    def program(self, canID):
         pass
 
-    def setSStatus(self):
+    def program6(self, canID):
         pass
 
-    def getSStatus(self):
+    def move(self, canID):
         pass
 
-    def buildChksum(self):
+    def getActiveCalPage(self, canID):
         pass
 
-    def clearMemory(self):
+    def selectCalPage(self, canID):
         pass
 
-    def program(self):
+    def unlock(self, canID):
         pass
 
-    def program6(self):
-        pass
-
-    def move(self):
-        pass
-
-    def getActiveCalPage(self):
-        pass
-
-    def selectCalPage(self):
-        pass
-
-    def unlock(self):
-        pass
-
-    def getSeed(self):
+    def getSeed(self, canID):
         pass
 
 

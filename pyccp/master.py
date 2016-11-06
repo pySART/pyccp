@@ -43,14 +43,16 @@ class Master(ccp.CRO):
         """
         self.transport.send(canID, cmd, ctr, b0, b1, b2, b3, b4, b5)
 
-    # Mandatory Commands.
+    ##
+    ## Mandatory Commands.
+    ##
     def connect(self, canID, address):
         h = (address & 0xff00) >> 8
         l = address & 0x00ff
-        self.sendCRO(canID, self.ctr, ccp.CommandCodes.CONNECT, l, h)
+        self.sendCRO(canID, ccp.CommandCodes.CONNECT, self.ctr, l, h)
 
-    def getCCPVersion(self, canID):
-        pass # GET_CCP_VERSION
+    def getCCPVersion(self, canID, major = 2, minor = 1):
+        self.sendCRO(canID, ccp.CommandCodes.GET_CCP_VERSION, self.ctr, major, minor)
 
     def exchangeId(self, canID):
         pass    # EXCHANGE_ID
@@ -79,7 +81,9 @@ class Master(ccp.CRO):
     def disconnect(self, canID):
         pass    # DISCONNECT
 
-    # Optional Commands.
+    ##
+    ## Optional Commands.
+    ##
     def test(self, canID):
         pass
 

@@ -33,8 +33,17 @@ from pyccp import ccp
 
 class Slave(object):
 
-    def __init__(self):
+    def __init__(self, transport, memory):
+        self.transport = transport
         self._mta = 0x0000
+        self.ctr = 0x00
+
+    def receive(self, cmo):
+        """
+        :param cmo: CAN Message Object
+        :type cmo: `CANMessageObject`
+        """
+        pass
 
     def onConnect(self):
         pass
@@ -42,7 +51,7 @@ class Slave(object):
     def onTest(self):
         pass
 
-    def OnExchangeId(self):
+    def onExchangeId(self):
         pass
 
     def onSetMta(self):
@@ -114,3 +123,33 @@ class Slave(object):
     def onGetSeed(self):
         pass
 
+    CALLBACKS = {
+        ccp.CommandCodes.CONNECT: onConnect,
+        ccp.CommandCodes.TEST: onTest,
+        ccp.CommandCodes.EXCHANGE_ID:  onExchangeId,
+        ccp.CommandCodes.SET_MTA: onSetMta,
+        ccp.CommandCodes.DNLOAD: onDnload,
+        ccp.CommandCodes.DNLOAD_6: onDnload6,
+        ccp.CommandCodes.UPLOAD: onUpload,
+        ccp.CommandCodes.SHORT_UP: onShortUp,
+        ccp.CommandCodes.GET_DAQ_SIZE: onGetDaqSize,
+        ccp.CommandCodes.SET_DAQ_PTR: onSetDaqPtr,
+        ccp.CommandCodes.WRITE_DAQ: onWriteDaq,
+        ccp.CommandCodes.START_STOP_ALL: onStartStopAll,
+        ccp.CommandCodes.START_STOP: onStartStop,
+        ccp.CommandCodes.DISCONNECT: onDisconnect,
+        ccp.CommandCodes.SET_S_STATUS: onSetSStatus,
+        ccp.CommandCodes.GET_S_STATUS: onGetSStatus,
+        ccp.CommandCodes.BUILD_CHKSUM: onBuildChksum,
+        ccp.CommandCodes.CLEAR_MEMORY: onClearMemory,
+        ccp.CommandCodes.PROGRAM: onProgram,
+        ccp.CommandCodes.PROGRAM_6: onProgram6,
+        ccp.CommandCodes.MOVE: onMove,
+        ccp.CommandCodes.GET_ACTIVE_CAL_PAGE: onGetActiveCalPage,
+        ccp.CommandCodes.SELECT_CAL_PAGE: onSelectCalPage,
+        ccp.CommandCodes.UNLOCK: onUnlock,
+        ccp.CommandCodes.GET_SEED: onGetSeed,
+    }
+
+transport = ccp.Transport()
+slave = Slave(transport)

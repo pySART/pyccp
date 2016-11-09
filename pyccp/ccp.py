@@ -175,15 +175,8 @@ class Transport(object):
     def send(self, canID, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, b7 = 0):
         self.message = CANMessageObject(canID, 8, bytearray((b0, b1, b2, b3, b4, b5, b6, b7)))
 
+    def __str__(self):
+        return "[Current Message]: {}".format(self.message)
 
-def main():
-    transport = Transport()
-    master = Master(transport)
-    master.ctr = 0x01
-    master.connect(0x7E1, 0x39)
-
-
-if __name__ == '__main__':
-    main()
-
+    __repr__ = __str__
 

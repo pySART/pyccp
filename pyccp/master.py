@@ -29,6 +29,7 @@ from pprint import pprint
 import struct
 
 from pyccp import ccp
+from pyccp.logger import Logger
 
 
 MTA0 = 0
@@ -39,7 +40,9 @@ class Master(ccp.CRO):
     def __init__(self, transport):
         self.slaveConnections = {}
         self.transport = transport
+        self.transport.parent = self
         self.ctr = 0x00
+        self.logger = Logger("pyccp.master")
 
     def sendCRO(self, canID, cmd, ctr, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0):
         """Transfer up to 6 data bytes from master to slave (ECU).

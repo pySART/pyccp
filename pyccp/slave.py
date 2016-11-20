@@ -29,21 +29,26 @@ from pprint import pprint
 import struct
 
 from pyccp import ccp
+from pyccp.logger import Logger
 
 
 class Slave(object):
 
     def __init__(self, transport, memory):
         self.transport = transport
+        self.transport.parent = self
         self._mta = 0x0000
         self.ctr = 0x00
+        self.logger = Logger("pyccp.slave")
 
     def receive(self, cmo):
         """
         :param cmo: CAN Message Object
         :type cmo: `CANMessageObject`
         """
-        pass
+        print("Received: {}".format(cmo))
+        cmd = cmo.data[0]
+        #print("Command-Handler: {}".format(self.COMMAND_HANDLERS[cmd]))
 
     def onConnect(self):
         pass
@@ -123,7 +128,7 @@ class Slave(object):
     def onGetSeed(self):
         pass
 
-    CALLBACKS = {
+    COMMAND_HANDLERS = {
         ccp.CommandCodes.CONNECT: onConnect,
         ccp.CommandCodes.TEST: onTest,
         ccp.CommandCodes.EXCHANGE_ID:  onExchangeId,
@@ -152,4 +157,5 @@ class Slave(object):
     }
 
 transport = ccp.Transport()
-slave = Slave(transport)
+memory = ccp.Memory()
+slave = Slave(transport, memory)

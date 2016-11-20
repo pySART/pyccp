@@ -25,8 +25,9 @@ __copyright__="""
 
 import logging
 
+from pyccp.utils import SingletonBase
 
-class Logger(object):
+class Logger(SingletonBase):
 
     LOGGER_BASE_NAME = 'pyccp'
     FORMAT = "[%(levelname)s (%(name)s)]: %(message)s"

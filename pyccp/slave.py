@@ -47,89 +47,95 @@ class Slave(object):
         :type cmo: `CANMessageObject`
         """
         print("Received: {}".format(cmo))
+        self.logger.debug("Received: {}".format(cmo))
         cmd = cmo.data[0]
+        self.COMMAND_HANDLERS[cmd](self)
         #print("Command-Handler: {}".format(self.COMMAND_HANDLERS[cmd]))
 
     def onConnect(self):
-        pass
+        self.logger.debug("onConnect")
+
+    def onGetCCPVersion(self):
+        self.logger.debug("onGetCCPVersion")
 
     def onTest(self):
-        pass
+        self.logger.debug("onTest")
 
     def onExchangeId(self):
-        pass
+        self.logger.debug("onExchangeId")
 
     def onSetMta(self):
-        pass
+        self.logger.debug("onSetMta")
 
     def onDnload(self):
-        pass
+        self.logger.debug("onDnload")
 
     def onDnload6(self):
-        pass
+        self.logger.debug("onDnload6")
 
     def onUpload(self):
-        pass
+        self.logger.debug("onUpload")
 
     def onShortUp(self):
         """
         0xff    0x00 0x23 0x10 0x11 0x12 0x13
         """
-        pass
+        self.logger.debug("onShortUp")
 
     def onGetDaqSize(self):
-        pass
+        self.logger.debug("onGetDaqSize")
 
     def onSetDaqPtr(self):
-        pass
+        self.logger.debug("onSetDaqPtr")
 
     def onWriteDaq(self):
-        pass
+        self.logger.debug("onWriteDaq")
 
     def onStartStopAll(self):
-        pass
+        self.logger.debug("onStartStopAll")
 
     def onStartStop(self):
-        pass
+        self.logger.debug("onStartStop")
 
     def onDisconnect(self):
-        pass
+        self.logger.debug("onDisconnect")
 
     def onSetSStatus(self):
-        pass
+        self.logger.debug("onSetSStatus")
 
     def onGetSStatus(self):
-        pass
+        self.logger.debug("onGetSStatus")
 
     def onBuildChksum(self):
-        pass
+        self.logger.debug("onBuildChksum")
 
     def onClearMemory(self):
-        pass
+        self.logger.debug("onClearMemory")
 
     def onProgram(self):
-        pass
+        self.logger.debug("onProgram")
 
     def onProgram6(self):
-        pass
+        self.logger.debug("onProgram6")
 
     def onMove(self):
-        pass
+        self.logger.debug("onMove")
 
     def onGetActiveCalPage(self):
-        pass
+        self.logger.debug("onGetActiveCalPage")
 
     def onSelectCalPage(self):
-        pass
+        self.logger.debug("onSelectCalPage")
 
     def onUnlock(self):
-        pass
+        self.logger.debug("onUnlock")
 
     def onGetSeed(self):
-        pass
+        self.logger.debug("onGetSeed")
 
     COMMAND_HANDLERS = {
         ccp.CommandCodes.CONNECT: onConnect,
+        ccp.CommandCodes.GET_CCP_VERSION: onGetCCPVersion,
         ccp.CommandCodes.TEST: onTest,
         ccp.CommandCodes.EXCHANGE_ID:  onExchangeId,
         ccp.CommandCodes.SET_MTA: onSetMta,

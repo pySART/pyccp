@@ -48,89 +48,97 @@ class Slave(object):
         """
         print("Received: {}".format(cmo))
         self.logger.debug("Received: {}".format(cmo))
+        self.commandHandler(cmo)
+
+    def commandHandler(self, cmo):
         cmd = cmo.data[0]
-        self.COMMAND_HANDLERS[cmd](self)
-        #print("Command-Handler: {}".format(self.COMMAND_HANDLERS[cmd]))
+        payload = cmo.data[ 1 : ]
+        handler = self.COMMAND_HANDLERS.get(cmd, None)
+        if handler:
+            handler(self, payload)
+        else:
+            pass # TODO: CCP error handling.
 
-    def onConnect(self):
+    def onConnect(self, payload):
         self.logger.debug("onConnect")
+        print("connecting", payload)
 
-    def onGetCCPVersion(self):
+    def onGetCCPVersion(self, payload):
         self.logger.debug("onGetCCPVersion")
 
-    def onTest(self):
+    def onTest(self, payload):
         self.logger.debug("onTest")
 
-    def onExchangeId(self):
+    def onExchangeId(self, payload):
         self.logger.debug("onExchangeId")
 
-    def onSetMta(self):
+    def onSetMta(self, payload):
         self.logger.debug("onSetMta")
 
-    def onDnload(self):
+    def onDnload(self, payload):
         self.logger.debug("onDnload")
 
-    def onDnload6(self):
+    def onDnload6(self, payload):
         self.logger.debug("onDnload6")
 
-    def onUpload(self):
+    def onUpload(self, payload):
         self.logger.debug("onUpload")
 
-    def onShortUp(self):
+    def onShortUp(self, payload):
         """
         0xff    0x00 0x23 0x10 0x11 0x12 0x13
         """
         self.logger.debug("onShortUp")
 
-    def onGetDaqSize(self):
+    def onGetDaqSize(self, payload):
         self.logger.debug("onGetDaqSize")
 
-    def onSetDaqPtr(self):
+    def onSetDaqPtr(self, payload):
         self.logger.debug("onSetDaqPtr")
 
-    def onWriteDaq(self):
+    def onWriteDaq(self, payload):
         self.logger.debug("onWriteDaq")
 
-    def onStartStopAll(self):
+    def onStartStopAll(self, payload):
         self.logger.debug("onStartStopAll")
 
-    def onStartStop(self):
+    def onStartStop(self, payload):
         self.logger.debug("onStartStop")
 
-    def onDisconnect(self):
+    def onDisconnect(self, payload):
         self.logger.debug("onDisconnect")
 
-    def onSetSStatus(self):
+    def onSetSStatus(self, payload):
         self.logger.debug("onSetSStatus")
 
-    def onGetSStatus(self):
+    def onGetSStatus(self, payload):
         self.logger.debug("onGetSStatus")
 
-    def onBuildChksum(self):
+    def onBuildChksum(self, payload):
         self.logger.debug("onBuildChksum")
 
-    def onClearMemory(self):
+    def onClearMemory(self, payload):
         self.logger.debug("onClearMemory")
 
-    def onProgram(self):
+    def onProgram(self, payload):
         self.logger.debug("onProgram")
 
-    def onProgram6(self):
+    def onProgram6(self, payload):
         self.logger.debug("onProgram6")
 
-    def onMove(self):
+    def onMove(self, payload):
         self.logger.debug("onMove")
 
-    def onGetActiveCalPage(self):
+    def onGetActiveCalPage(self, payload):
         self.logger.debug("onGetActiveCalPage")
 
-    def onSelectCalPage(self):
+    def onSelectCalPage(self, payload):
         self.logger.debug("onSelectCalPage")
 
-    def onUnlock(self):
+    def onUnlock(self, payload):
         self.logger.debug("onUnlock")
 
-    def onGetSeed(self):
+    def onGetSeed(self, payload):
         self.logger.debug("onGetSeed")
 
     COMMAND_HANDLERS = {

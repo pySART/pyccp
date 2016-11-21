@@ -32,6 +32,7 @@ import struct
 MAX_CTO = 0x0008
 MAX_DTO = 0x0008
 
+CCP_VERSION = (2, 1)
 
 class CommandCodes(enum.IntEnum):
 

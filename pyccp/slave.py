@@ -73,12 +73,12 @@ class Slave(object):
     def getState(self):
         return self.state
 
-    def assertStateIsConnected(self):
-        self.state == SlaveState(SlaveState.CONNECTED)
-        pass
-
     def sendDTO(self, returnCode, counter, payload = []):
         self.transport.send(self.masterAddress, ccp.DTOType.COMMAND_RETURN_MESSAGE, returnCode, counter, *payload)
+
+    def sendDTOIfConnected(self, returnCode, counter, payload = []):
+        if self.state == SlaveState(SlaveState.CONNECTED):
+            self.transport.send(self.masterAddress, ccp.DTOType.COMMAND_RETURN_MESSAGE, returnCode, counter, *payload)
 
     def commandHandler(self, cmo):
         cmd = cmo.data[0]
@@ -102,7 +102,10 @@ class Slave(object):
 
 
     def onGetCCPVersion(self, counter, payload):
+        # This command is expected to be executed prior to the EXCHANGE_ID command.
         self.logger.debug("onGetCCPVersion")
+        self.sendDTO(ccp.ReturnCodes.ACKNOWLEDGE, counter, ccp.CCP_VERSION)
+        #self.sendDTOIfConnected(ccp.ReturnCodes.ACKNOWLEDGE, counter, ccp.CCP_VERSION)
 
     def onTest(self, counter, payload):
         self.logger.debug("onTest")

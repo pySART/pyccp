@@ -32,14 +32,31 @@ from pyccp import ccp
 from pyccp.logger import Logger
 
 
+def getLEWord(payload):
+    return payload[1] << 8 | payload[0]
+
+def getBEWord(payload):
+    return payload[0] << 8 | payload[1]
+
+
+class SlaveState(enum.IntEnum):
+
+    DISCONNECTED = 1
+    CONNECTED    = 2
+
+
 class Slave(object):
 
-    def __init__(self, transport, memory):
+    def __init__(self, stationAddress, transport, memory):
+        self.stationAddress = stationAddress
         self.transport = transport
         self.transport.parent = self
+        self.masterAddress = 0x0815
         self._mta = 0x0000
         self.ctr = 0x00
+        self.setState(SlaveState.DISCONNECTED)
         self.logger = Logger("pyccp.slave")
+        # Ignore telegrams if not connected.
 
     def receive(self, cmo):
         """
@@ -49,6 +66,19 @@ class Slave(object):
         print("Received: {}".format(cmo))
         self.logger.debug("Received: {}".format(cmo))
         self.commandHandler(cmo)
+
+    def setState(self, state):
+        self.state = SlaveState(state)
+
+    def getState(self):
+        return self.state
+
+    def assertStateIsConnected(self):
+        self.state == SlaveState(SlaveState.CONNECTED)
+        pass
+
+    def sendDTO(self, returnCode, counter, payload = []):
+        self.transport.send(self.masterAddress, ccp.DTOType.COMMAND_RETURN_MESSAGE, returnCode, counter, *payload)
 
     def commandHandler(self, cmo):
         cmd = cmo.data[0]
@@ -62,7 +92,14 @@ class Slave(object):
 
     def onConnect(self, counter, payload):
         self.logger.debug("onConnect")
-        print("connecting", counter, payload)
+        stationAddress = getLEWord(payload[0 : ])
+        #print("connecting", counter, payload)
+        if stationAddress == self.stationAddress:
+            self.setState(SlaveState.CONNECTED)
+            self.sendDTO(ccp.ReturnCodes.ACKNOWLEDGE, counter)
+        else:
+            self.setState(SlaveState.DISCONNECTED)
+
 
     def onGetCCPVersion(self, counter, payload):
         self.logger.debug("onGetCCPVersion")
@@ -171,6 +208,3 @@ class Slave(object):
         ccp.CommandCodes.GET_SEED: onGetSeed,
     }
 
-transport = ccp.Transport()
-memory = ccp.Memory()
-slave = Slave(transport, memory)

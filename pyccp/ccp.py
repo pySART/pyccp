@@ -171,7 +171,7 @@ class CANMessageObject(object):
     __repr__ = __str__
 
 
-class Transport(object):
+class MockTransport(object):
 
     def __init__(self):
         self.parent = None

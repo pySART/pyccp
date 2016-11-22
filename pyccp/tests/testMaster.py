@@ -9,7 +9,7 @@ from pyccp.master import Master
 class TestMaster(unittest.TestCase):
 
     def setUp(self):
-        transport = ccp.Transport()
+        transport = ccp.MockTransport()
         self.master = Master(transport)
         self.master.ctr = 0x27
 

@@ -18,7 +18,7 @@ STATION_ADDRESS = 0x39
 class TestSlave(unittest.TestCase):
 
     def setUp(self):
-        transport = ccp.Transport()
+        transport = ccp.MockTransport()
         memory = ccp.Memory()
         self.slave = Slave(STATION_ADDRESS, transport, memory)
         self.slave.logger.setLevel("DEBUG")
@@ -40,6 +40,14 @@ class TestSlave(unittest.TestCase):
     @unittest.skip
     def testExchangeID(self):
         self.runTest("exchangeId", "07E1  17 27 00 00 00 00 00 00", 0x7E1)
+
+
+class TestUnconnectedServices(unittest.TestCase):
+    pass
+
+
+class TestConnectedServices(unittest.TestCase):
+    pass
 
 
 def main():

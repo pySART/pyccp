@@ -4,7 +4,7 @@
 __copyright__="""
     pySART - Simplified AUTOSAR-Toolkit for Python.
 
-   (C) 2009-2016 by Christoph Schueler <cpu12.gems@googlemail.com>
+   (C) 2009-2018 by Christoph Schueler <cpu12.gems@googlemail.com>
 
    All Rights Reserved
 
@@ -201,3 +201,10 @@ def memoryMap(filename, writeable = False):
     fd = os.open(filename, os.O_RDWR if writeable else os.O_RDONLY)
     return mmap.mmap(fd, size, access = mmap.ACCESS_WRITE if writeable else mmap.ACCESS_READ)
 
+from unicodedata import normalize
+
+def nfc_equal(str1, str2):
+    return normalize('NFC', str1) == normalize('NFC', str2)
+
+def fold_equal(str1, str2):
+    return (normalize('NFC', str1).casefold() == normalize('NFC', str2).casefold())

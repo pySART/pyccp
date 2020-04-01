@@ -4,8 +4,6 @@ import os
 from setuptools import setup, find_packages
 from glob import glob
 
-def packagez(base):
-    return  ["{0!s}{1!s}{2!s}".format(base, os.path.sep, p) for p in find_packages(base)]
 
 setup(
     name = 'pyccp',
@@ -15,7 +13,7 @@ setup(
     author = 'Christoph Schueler',
     author_email = 'cpu12.gems@googlemail.com',
     url = 'http://github.com/pySART/pyccp',
-    packages = packagez('pyccp'),
+    packages = find_packages(),
     install_requires = ['enum34', 'future', 'mako'],    # 'mock'
     #entry_points = {
     #    'console_scripts': [
